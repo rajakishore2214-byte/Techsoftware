@@ -1,0 +1,176 @@
+{
+  "trending_topic": {
+    "topic": "AI Automation for Small Business Growth",
+    "category": "AI in Business",
+    "score": 97,
+    "keywords": ["AI automation", "small business AI", "business growth automation"],
+    "insight": "Businesses adopting AI tools report 40% faster operations — owners are searching for affordable entry points.",
+    "source": "fallback"
+  },
+  "viral_analysis": {
+    "hook_type": "pain_point",
+    "hook_analysis": "The hook surfaces a specific hidden cost ('your team is doing this manually') that every business owner immediately recognises as their own situation, forcing them to keep watching to find out what they're losing.",
+    "emotional_trigger": "fear",
+    "emotional_trigger_explanation": "The fear of falling behind competitors who are already using AI creates urgency in the first 3 seconds.",
+    "content_structure": "problem-agitate-solve",
+    "structure_breakdown": "Opens with the problem statement, agitates by quantifying the cost, then offers a clear solution path the viewer can act on.",
+    "topic_category": "AI Automation",
+    "audience_pain_point": "Business owners are losing 15–20 hours/week on tasks AI could handle in minutes, but don't know where to start.",
+    "value_delivered": "A concrete 3-step framework for identifying and automating the highest-ROI tasks in any business.",
+    "why_it_performed_well": [
+      "The hook calls out a specific, painful, universally-relatable situation",
+      "Concrete numbers (15–20 hours, 40% faster) make the claim believable and shareable",
+      "The CTA offers a low-friction first step (free audit) that converts browsers into leads"
+    ],
+    "repeatable_pattern": {
+      "hook_formula": "Your [BUSINESS PROCESS] is costing you [SPECIFIC HOURS/MONEY] every [TIME PERIOD]",
+      "body_formula": "Step 1: Name the exact pain → Step 2: Quantify what it costs → Step 3: Show the before/after with real numbers → Step 4: CTA",
+      "cta_formula": "Comment/DM '[KEYWORD]' to get a free [SPECIFIC DELIVERABLE]"
+    },
+    "viral_formula_name": "The Hidden Cost Reveal",
+    "improvement_opportunities": [
+      "Add a real client screenshot or screen recording for social proof in scene 3",
+      "Replace generic b-roll with specific tool demonstrations (e.g., Zapier, Make, or n8n workflow)",
+      "Make the CTA more specific: instead of 'free consultation', offer a '10-minute AI audit checklist'"
+    ],
+    "improvement": {
+      "improved_hook": "Your team wasted 18 hours last week. AI fixes it in 4.",
+      "improved_caption_preview": "Your team wasted 18 hours last week. AI fixes it in 4.\n\nHere's the exact 3-task automation stack that gave our client 22 hours back every week:\n→ Email triage: 6 hrs saved\n",
+      "improved_visual_concept": "Side-by-side screen recording: left shows manual Gmail inbox chaos, right shows AI-sorted inbox with 90% auto-handled — film this in one take for authenticity.",
+      "why_this_version_wins": "Specific hours (18 → 4) are more credible than vague claims, and the side-by-side visual proof format has 3x higher save rate than talking-head videos in this niche."
+    }
+  },
+  "generated_content": {
+    "hooks": {
+      "hooks": [
+        {
+          "id": 1,
+          "type": "pain_point",
+          "text": "Your team wasted 18 hours last week. AI fixes it in 4.",
+          "why_it_works": "Pairs a specific painful loss with a concrete, credible solution — creates instant ROI calculation in the viewer's head."
+        },
+        {
+          "id": 2,
+          "type": "curiosity",
+          "text": "The AI tool most agencies don't want you to know about.",
+          "why_it_works": "Positions the viewer as being about to receive insider knowledge their competitors are hiding."
+        },
+        {
+          "id": 3,
+          "type": "authority_result",
+          "text": "3 AI automations that freed 22 hours/week for a $2M business.",
+          "why_it_works": "Specific result + business size qualifier pre-frames the viewer as the exact target audience."
+        }
+      ],
+      "recommended_hook_id": 1,
+      "recommended_reason": "Pain-point + concrete time saving is the highest-performing hook format for SMB audiences on Instagram and LinkedIn."
+    },
+    "reel_script": {
+      "hook": "Your team wasted 18 hours last week. AI fixes it in 4.",
+      "total_duration": "52 seconds",
+      "scenes": [
+        {
+          "scene_number": 1,
+          "title": "The Hook",
+          "duration": "0–3 sec",
+          "voiceover": "Your team wasted 18 hours last week. AI fixes it in 4.",
+          "on_screen_text": "18 HOURS WASTED → 4 HOURS WITH AI",
+          "visual": "Close-up of a cluttered desk with a laptop showing an overflowing inbox, then cut to a clean desk with a single automation dashboard",
+          "b_roll_suggestion": "Stock footage: overwhelmed professional at laptop vs. relaxed professional reviewing clean dashboard",
+          "transition": "cut"
+        },
+        {
+          "scene_number": 2,
+          "title": "The Problem",
+          "duration": "3–15 sec",
+          "voiceover": "Most business owners are manually doing three things that should be automated. Email sorting. Lead follow-up. Report generation.",
+          "on_screen_text": "1. Email sorting  2. Lead follow-up  3. Reports",
+          "visual": "Screen recording: manually processing emails one by one, time-lapse style",
+          "b_roll_suggestion": "Cursor clicking through dozens of emails, calendar booking one-by-one",
+          "transition": "zoom"
+        },
+        {
+          "scene_number": 3,
+          "title": "The Solution",
+          "duration": "15–32 sec",
+          "voiceover": "Here's the exact AI stack we set up for a client last month. Zapier handles email triage — saves 6 hours. Clay automates lead follow-up — saves 8 hours. And a GPT-4 report bot kills 4 more hours every week.",
+          "on_screen_text": "Zapier → 6 hrs | Clay → 8 hrs | GPT-4 → 4 hrs",
+          "visual": "Screen recording of Zapier workflow, then Clay dashboard, then a GPT-generated report",
+          "b_roll_suggestion": "Actual software screen recordings at normal speed — authenticity matters here",
+          "transition": "swipe"
+        },
+        {
+          "scene_number": 4,
+          "title": "The Proof",
+          "duration": "32–45 sec",
+          "voiceover": "Total cost to set this up? Under $200 per month. Time saved? 22 hours every single week.",
+          "on_screen_text": "Cost: $200/mo → Time Saved: 22 hrs/week",
+          "visual": "Before/after slide: red numbers showing manual hours vs. green numbers showing automated hours",
+          "b_roll_suggestion": "Split screen: old process vs. new dashboard",
+          "transition": "cut"
+        },
+        {
+          "scene_number": 5,
+          "title": "The CTA",
+          "duration": "45–52 sec",
+          "voiceover": "Want us to map out the same system for your business? Comment 'AUTOMATE' below and we'll send you a free AI audit checklist.",
+          "on_screen_text": "Comment 'AUTOMATE' for your FREE AI Audit ↓",
+          "visual": "Presenter on camera, pointing down toward comments",
+          "b_roll_suggestion": "Face-to-camera, well-lit, clean background with subtle brand element",
+          "transition": "fade"
+        }
+      ],
+      "cta": "Comment 'AUTOMATE' below for your free AI audit checklist",
+      "music_mood": "Upbeat corporate, 120 BPM, no lyrics",
+      "caption_line": "Your team wasted 18 hours last week. AI fixes it in 4."
+    },
+    "carousel": {
+      "carousel_theme": "Dark professional with high-contrast data callouts",
+      "slides": [
+        {"slide_number": 1, "type": "hook",   "headline": "Your team wasted 18 hrs last week. AI fixes it in 4.", "subtext": "Swipe to see the exact automation stack →", "visual_direction": "Dark background, large white headline, red accent on '18 hrs'", "design_tip": "Use 72px+ font, centre-aligned, full bleed dark gradient background"},
+        {"slide_number": 2, "type": "value",  "headline": "The 3 tasks you're still doing manually", "subtext": "Email triage · Lead follow-up · Report generation", "visual_direction": "3 icons with red X marks, clean white background", "design_tip": "Icon row with text below each, left-aligned body"},
+        {"slide_number": 3, "type": "value",  "headline": "Automation 1: Email Triage", "subtext": "Zapier sorts, labels, and routes 80% of emails automatically. Saves 6 hrs/week.", "visual_direction": "Zapier logo + inbox screenshot + '6 HRS SAVED' callout", "design_tip": "Software screenshot as background with overlay stats"},
+        {"slide_number": 4, "type": "value",  "headline": "Automation 2: Lead Follow-Up", "subtext": "Clay sends personalised follow-ups to every lead within 5 minutes. Saves 8 hrs/week.", "visual_direction": "Clay dashboard screenshot + '8 HRS SAVED' green badge", "design_tip": "Same layout as slide 3 for visual consistency"},
+        {"slide_number": 5, "type": "value",  "headline": "Automation 3: Report Generation", "subtext": "GPT-4 bot pulls data and writes weekly reports. Saves 4 hrs/week.", "visual_direction": "Sample AI-generated report with GPT logo + '4 HRS SAVED'", "design_tip": "Show a real-looking report preview, not generic AI imagery"},
+        {"slide_number": 6, "type": "cta",    "headline": "Total: 22 hrs/week freed. Cost: $200/mo.", "subtext": "Comment 'AUTOMATE' for your free AI audit checklist.", "visual_direction": "Bold dark slide, large green ROI numbers, CTA button-style box", "design_tip": "Make the CTA visually look like a button — rounded rectangle, contrasting colour"}
+      ],
+      "colour_palette": ["#0D0D0D", "#E8FF00", "#FFFFFF"],
+      "font_pairing": "Montserrat ExtraBold (headlines) + Inter Regular (body)",
+      "overall_design_style": "bold-dark-data"
+    },
+    "caption": {
+      "caption": "Your team wasted 18 hours last week. AI fixes it in 4.\n\nMost business owners are doing 3 things manually that should be automated:\n\n→ Email triage (6 hrs/week)\n→ Lead follow-up (8 hrs/week)\n→ Report generation (4 hrs/week)\n\nLast month we set up a $200/month AI stack for a client that eliminated all three.\n\nResult: 22 hours freed every week. Sales response time went from 4 hours to 4 minutes.\n\nHere's the exact stack:\n✅ Zapier — email sorting & routing\n✅ Clay — personalised lead follow-up at scale\n✅ GPT-4 bot — weekly report generation\n\nTotal setup time: 3 days. ROI: immediate.\n\nIf you're still doing this manually, you're not competing. You're surviving.\n\n💬 Comment 'AUTOMATE' below and we'll send you a free AI audit checklist showing exactly which tasks in your business should be automated first.",
+      "seo_keywords_used": ["AI automation", "business automation", "AI tools for business", "Zapier automation", "lead follow-up automation"],
+      "hashtags": ["#AIautomation", "#businessautomation", "#digitalmarketing", "#smallbusiness", "#AItools", "#businessgrowth", "#marketingautomation", "#entrepreneur", "#startupgrowth", "#zapier", "#leadgeneration", "#AIagency"],
+      "cta_variants": {
+        "soft":   "Save this post — you'll want to refer back to the stack list.",
+        "medium": "Comment 'AUTOMATE' and we'll send you the free checklist.",
+        "hard":   "DM us 'AUDIT' for a 15-minute free AI readiness call — we'll show you exactly what to automate first in your business."
+      },
+      "first_comment_hashtags": ["#AImarketing", "#workflowautomation", "#growthhacking"]
+    }
+  },
+  "qc_result": {
+    "scores": {
+      "hooks":    9,
+      "caption":  9,
+      "carousel": 8,
+      "cta":      9,
+      "overall":  9
+    },
+    "passes_qc": true,
+    "issues_found": [
+      "Carousel slide 2 could use a more specific sub-headline instead of just listing the 3 tasks"
+    ],
+    "improvements": [
+      {
+        "field": "carousel",
+        "original": "The 3 tasks you're still doing manually",
+        "improved": "These 3 tasks eat 18 hours of your week — and you don't have to do any of them",
+        "reason": "Adding the specific time cost to the carousel hook slide increases urgency and click-through on the swipe."
+      }
+    ],
+    "qc_verdict": "APPROVED",
+    "reviewer_note": "Strong, specific, non-generic content with clear lead-gen CTAs throughout — ready for publishing."
+  }
+}
