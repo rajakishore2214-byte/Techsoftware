@@ -17,6 +17,7 @@ Assets produced:
 from typing import Any
 
 from services.llm_service import call_llm_json, call_qc
+from services.skill_service import get_digital_marketing_skill, get_social_media_skill
 from config import PRIMARY_MODEL, AGENCY_NAME, AGENCY_SERVICES, TARGET_AUDIENCE, CONTENT_GOAL
 from utils.logger import get_logger
 
@@ -140,6 +141,8 @@ Carousel rules:
 - Slide 6 = CTA slide (lead generation)
 - Each slide: bold headline + 1–2 supporting lines + visual direction
 
+CRITICAL INSTRUCTION: Apply the content strategies, daily intelligence workflow, and rules from your system instructions (Digital Marketing Skill), BUT you MUST format your final output STRICTLY as the JSON schema below. Adapt the content you generate into this JSON structure instead of your default markdown format.
+
 Return STRICT JSON:
 {{
   "carousel_theme": "<overall visual theme>",
@@ -189,6 +192,8 @@ Caption requirements:
 Also generate:
 - 12–15 hashtags (mix of niche, mid-range, and broad)
 - 3 CTA variants (soft, medium, hard)
+
+CRITICAL INSTRUCTION: Apply the content strategies, tone guidelines, conversion paths, and hashtag tiers from your system instructions (Social Media Marketing Skill), BUT you MUST format your final output STRICTLY as the JSON schema below. Adapt the content you generate into this JSON structure instead of your default markdown format.
 
 Return STRICT JSON:
 {{
@@ -290,7 +295,8 @@ def generate_carousel(
     hooks: dict[str, Any],
 ) -> dict[str, Any]:
     logger.info("Generating carousel...")
-    result = call_llm_json(_carousel_prompt(topic, analysis, hooks))
+    skill_prompt = get_digital_marketing_skill()
+    result = call_llm_json(_carousel_prompt(topic, analysis, hooks), system_prompt=skill_prompt)
     logger.info("Carousel generated | slides=%d", len(result.get("slides", [])))
     return result
 
@@ -302,7 +308,8 @@ def generate_caption_and_hashtags(
     reel_script: dict[str, Any],
 ) -> dict[str, Any]:
     logger.info("Generating caption & hashtags...")
-    result = call_llm_json(_caption_prompt(topic, analysis, hooks, reel_script))
+    skill_prompt = get_social_media_skill()
+    result = call_llm_json(_caption_prompt(topic, analysis, hooks, reel_script), system_prompt=skill_prompt)
     logger.info(
         "Caption generated | hashtags=%d", len(result.get("hashtags", []))
     )

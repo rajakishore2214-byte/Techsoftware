@@ -43,9 +43,9 @@ logger = get_logger("pipeline")
 
 def _banner(step: int, total: int, title: str) -> None:
     logger.info("")
-    logger.info("─" * 60)
-    logger.info("  STEP %d/%d │ %s", step, total, title)
-    logger.info("─" * 60)
+    logger.info("-" * 60)
+    logger.info("  STEP %d/%d | %s", step, total, title)
+    logger.info("-" * 60)
 
 
 def run_pipeline(viral_input: dict | None = None) -> dict:

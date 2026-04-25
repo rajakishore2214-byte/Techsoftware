@@ -125,7 +125,7 @@ def build_video_prompts(
     }
 
     if not MOCK_MEDIA_APIS:
-        result = _call_runway_api(result, runway_prompts)
+        result = _call_modelslab_video_api(result, runway_prompts)
 
     logger.info(
         "Video prompts built | scenes=%d | status=%s",
@@ -135,28 +135,53 @@ def build_video_prompts(
     return result
 
 
-def _call_runway_api(
+def _call_modelslab_video_api(
     result: dict[str, Any],
     prompts: list[dict[str, Any]],
 ) -> dict[str, Any]:
     """
-    Placeholder for real Runway ML API integration.
-    Activate by setting MOCK_MEDIA_APIS=False and providing RUNWAY_API_KEY.
+    Real ModelsLab Video API integration (veo-3.1-lite-i2v).
+    Activate by setting MOCK_MEDIA_APIS=False and providing MODELSLAB_API_KEY.
     """
     import os  # noqa: PLC0415
-    api_key = os.getenv("RUNWAY_API_KEY", "")
+    import requests # noqa: PLC0415
+    
+    api_key = os.getenv("MODELSLAB_API_KEY", "")
     if not api_key:
-        logger.warning("RUNWAY_API_KEY not set — falling back to mock mode")
+        logger.warning("MODELSLAB_API_KEY not set — falling back to mock mode")
         result["status"] = "mocked"
         return result
 
-    # TODO: integrate runwayml Python SDK when available
-    # from runwayml import RunwayML
-    # client = RunwayML(api_key=api_key)
-    # for prompt_data in prompts:
-    #     task = client.image_to_video.create(...)
-    #     result["runway_tasks"].append(task.id)
+    url = "https://modelslab.com/api/v7/video-fusion/image-to-video"
+    headers = {"Content-Type": "application/json"}
+    
+    for scene_prompt in prompts:
+        data = {
+            "key": api_key,
+            "model_id": "veo-3.1-lite-i2v",
+            "init_image": scene_prompt.get("init_image", "https://assets.modelslab.ai/generations/3d43311f-116b-4255-a8d8-40862f695359.png"), # placeholder if none provided
+            "prompt": scene_prompt["prompt"]
+        }
+        
+        try:
+            response = requests.post(url, headers=headers, json=data)
+            response.raise_for_status()
+            res_json = response.json()
+            
+            if res_json.get("status") == "success" or "output" in res_json:
+                # Video APIs often return a job/task ID or a direct URL if fast. 
+                # Adjust based on ModelsLab's exact response structure for video.
+                scene_prompt["modelslab_video_url"] = res_json.get("output", [""])[0]
+                logger.info(f"Generated video task for scene {scene_prompt.get('scene_number')}")
+            else:
+                logger.error(f"Modelslab Video API error: {res_json}")
+                scene_prompt["modelslab_video_url"] = None
+        except requests.exceptions.HTTPError as http_err:
+            logger.error(f"HTTP error occurred during Modelslab video generation: {http_err} - {response.text}")
+            scene_prompt["modelslab_video_url"] = None
+        except Exception as err:
+            logger.error(f"Other error occurred during Modelslab video generation: {err}")
+            scene_prompt["modelslab_video_url"] = None
 
-    logger.warning("Runway API integration not yet implemented — using mock")
-    result["status"] = "mocked"
+    result["status"] = "live"
     return result

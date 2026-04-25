@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
+# Load environment variables
 load_dotenv()
 
 # ── Directory Layout ──────────────────────────────────────────────────────────
@@ -15,9 +16,10 @@ for _dir in [OUTPUT_DIR, SCRIPTS_DIR, IMAGES_DIR, VIDEOS_DIR]:
     _dir.mkdir(parents=True, exist_ok=True)
 
 # ── Claude / Anthropic ────────────────────────────────────────────────────────
-ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
-PRIMARY_MODEL     = "claude-sonnet-4-6"          # main generation & QC
-FAST_MODEL        = "claude-haiku-4-5-20251001"  # lightweight tasks
+ANTHROPIC_API_KEY  = os.getenv("ANTHROPIC_API_KEY", "")
+ANTHROPIC_BASE_URL = os.getenv("ANTHROPIC_BASE_URL", None)
+PRIMARY_MODEL      = "claude-sonnet-4-6"          # main generation & QC
+FAST_MODEL         = "claude-haiku-4-5-20251001"  # lightweight tasks
 QC_MODEL          = "claude-sonnet-4-6"
 
 MAX_TOKENS    = 4096

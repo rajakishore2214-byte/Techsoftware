@@ -12,6 +12,7 @@ import anthropic
 
 from config import (
     ANTHROPIC_API_KEY,
+    ANTHROPIC_BASE_URL,
     AGENCY_NAME,
     AGENCY_SERVICES,
     TARGET_AUDIENCE,
@@ -52,7 +53,12 @@ def _get_client() -> anthropic.Anthropic:
             raise EnvironmentError(
                 "ANTHROPIC_API_KEY is not set. Add it to your .env file."
             )
-        _client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+        
+        kwargs = {"api_key": ANTHROPIC_API_KEY}
+        if ANTHROPIC_BASE_URL:
+            kwargs["base_url"] = ANTHROPIC_BASE_URL
+            
+        _client = anthropic.Anthropic(**kwargs)
     return _client
 
 
@@ -61,6 +67,7 @@ def _call(
     model: str = PRIMARY_MODEL,
     max_tokens: int = MAX_TOKENS,
     retries: int = 2,
+    system_prompt: str | None = None,
 ) -> str:
     """
     Call the Claude API with prompt caching on the system context.
@@ -68,10 +75,12 @@ def _call(
     """
     client = _get_client()
 
+    sys_prompt_text = system_prompt if system_prompt else _SYSTEM_PROMPT
+
     system_block = [
         {
             "type": "text",
-            "text": _SYSTEM_PROMPT,
+            "text": sys_prompt_text,
             "cache_control": {"type": "ephemeral"},
         }
     ]
@@ -117,9 +126,10 @@ def call_llm_json(
     prompt: str,
     model: str = PRIMARY_MODEL,
     max_tokens: int = MAX_TOKENS,
+    system_prompt: str | None = None,
 ) -> dict[str, Any]:
     """Call LLM and return a parsed JSON dict."""
-    raw = _call(prompt, model=model, max_tokens=max_tokens)
+    raw = _call(prompt, model=model, max_tokens=max_tokens, system_prompt=system_prompt)
     raw = _strip_fences(raw)
     try:
         return json.loads(raw)
@@ -132,9 +142,10 @@ def call_llm_text(
     prompt: str,
     model: str = PRIMARY_MODEL,
     max_tokens: int = MAX_TOKENS,
+    system_prompt: str | None = None,
 ) -> str:
     """Call LLM and return plain text."""
-    return _call(prompt, model=model, max_tokens=max_tokens)
+    return _call(prompt, model=model, max_tokens=max_tokens, system_prompt=system_prompt)
 
 
 def call_qc(prompt: str) -> dict[str, Any]:

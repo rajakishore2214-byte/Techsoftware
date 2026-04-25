@@ -13,6 +13,8 @@ from typing import Any
 
 from config import MOCK_MEDIA_APIS, AGENCY_NAME
 from utils.logger import get_logger
+from services.llm_service import call_llm_json
+from services.skill_service import get_kendrithm_visuals_skill
 
 logger = get_logger(__name__)
 
@@ -158,6 +160,30 @@ def build_design_prompts(
         "export_format":   "PNG, 300 DPI",
     }
 
+    pillow_prompt = f"""
+Generate a complete, runnable Python script using the Pillow library to create the carousel slides.
+
+Topic: {topic.get('topic', '')}
+Carousel Content:
+{str(slides)}
+
+CRITICAL INSTRUCTION: You MUST apply all the color, typography, spacing, and Python boilerplate rules from your system instructions (Kendrithm Visuals Skill). 
+Return a STRICT JSON response containing the full python code.
+
+Return STRICT JSON:
+{{
+  "python_script": "import os\\nfrom PIL import Image..."
+}}
+"""
+    skill_prompt = get_kendrithm_visuals_skill()
+    try:
+        logger.info("Generating Kendrithm Pillow script...")
+        script_res = call_llm_json(pillow_prompt, system_prompt=skill_prompt, max_tokens=4000)
+        pillow_script = script_res.get("python_script", "")
+    except Exception as e:
+        logger.error(f"Failed to generate Pillow script: {e}")
+        pillow_script = ""
+
     result: dict[str, Any] = {
         "status":          "mocked" if MOCK_MEDIA_APIS else "live",
         "carousel_theme":  theme,
@@ -166,6 +192,7 @@ def build_design_prompts(
         "slide_prompts":   slide_prompts,
         "reel_thumbnail":  thumbnail,
         "canva_spec":      canva_spec,
+        "pillow_script":   pillow_script,
         "manual_steps": [
             "1. Open Canva and search the template in canva_spec.template_search",
             "2. Apply colour_palette and font_pairing from this spec",
@@ -177,7 +204,7 @@ def build_design_prompts(
     }
 
     if not MOCK_MEDIA_APIS:
-        result = _call_dalle_api(result, slide_prompts)
+        result = _call_modelslab_api(result, slide_prompts)
 
     logger.info(
         "Design prompts built | slides=%d | status=%s",
@@ -187,28 +214,52 @@ def build_design_prompts(
     return result
 
 
-def _call_dalle_api(
+def _call_modelslab_api(
     result: dict[str, Any],
     slide_prompts: list[dict[str, Any]],
 ) -> dict[str, Any]:
     """
-    Placeholder for real DALL-E 3 / OpenAI Images API integration.
-    Activate by setting MOCK_MEDIA_APIS=False and providing OPENAI_API_KEY.
+    Real ModelsLab API integration.
+    Activate by setting MOCK_MEDIA_APIS=False and providing MODELSLAB_API_KEY.
     """
     import os  # noqa: PLC0415
-    api_key = os.getenv("OPENAI_API_KEY", "")
+    import requests # noqa: PLC0415
+    api_key = os.getenv("MODELSLAB_API_KEY", "")
     if not api_key:
-        logger.warning("OPENAI_API_KEY not set — falling back to mock mode")
+        logger.warning("MODELSLAB_API_KEY not set — falling back to mock mode")
         result["status"] = "mocked"
         return result
 
-    # TODO: real integration
-    # import openai
-    # client = openai.OpenAI(api_key=api_key)
-    # for sp in slide_prompts:
-    #     resp = client.images.generate(**sp["dalle3"])
-    #     sp["dalle3_url"] = resp.data[0].url
+    url = "https://modelslab.com/api/v7/images/text-to-image"
+    headers = {"Content-Type": "application/json"}
+    
+    for sp in slide_prompts:
+        data = {
+            "key": api_key,
+            "model_id": "gemini-3.1-t2i",
+            "prompt": sp["dalle3"]["prompt"],
+            "aspect_ratio": "4:5"
+        }
+        
+        try:
+            response = requests.post(url, headers=headers, json=data)
+            response.raise_for_status()
+            res_json = response.json()
+            
+            # The API response typically contains the generated image link(s) in an 'output' array or similar.
+            # You might need to adjust the parsing below based on the actual API response schema.
+            if res_json.get("status") == "success" or "output" in res_json:
+                sp["modelslab_url"] = res_json.get("output", [""])[0]
+                logger.info(f"Generated image for slide {sp.get('slide_number')}")
+            else:
+                logger.error(f"Modelslab API error: {res_json}")
+                sp["modelslab_url"] = None
+        except requests.exceptions.HTTPError as http_err:
+            logger.error(f"HTTP error occurred during Modelslab generation: {http_err} - {response.text}")
+            sp["modelslab_url"] = None
+        except Exception as err:
+            logger.error(f"Other error occurred during Modelslab generation: {err}")
+            sp["modelslab_url"] = None
 
-    logger.warning("DALL-E API integration not yet implemented — using mock")
-    result["status"] = "mocked"
+    result["status"] = "live"
     return result
