@@ -1,5 +1,5 @@
 """
-Thin wrapper around the Anthropic SDK.
+Thin wrapper around the Gemini SDK.
 Uses prompt caching on the shared system context to reduce token costs.
 """
 
@@ -8,11 +8,12 @@ import re
 import time
 from typing import Any
 
-import anthropic
+import google.generativeai as genai
+from google.generativeai.types import GenerationConfig
+from google.api_core import exceptions
 
 from config import (
-    ANTHROPIC_API_KEY,
-    ANTHROPIC_BASE_URL,
+    GEMINI_API_KEY,
     AGENCY_NAME,
     AGENCY_SERVICES,
     TARGET_AUDIENCE,
@@ -43,23 +44,17 @@ RULES — follow without exception:
 5. CTAs must be direct lead-generation calls to action.
 """
 
-_client: anthropic.Anthropic | None = None
+_client_configured = False
 
-
-def _get_client() -> anthropic.Anthropic:
-    global _client
-    if _client is None:
-        if not ANTHROPIC_API_KEY:
+def _configure_client():
+    global _client_configured
+    if not _client_configured:
+        if not GEMINI_API_KEY:
             raise EnvironmentError(
-                "ANTHROPIC_API_KEY is not set. Add it to your .env file."
+                "GEMINI_API_KEY is not set. Add it to your .env file."
             )
-        
-        kwargs = {"api_key": ANTHROPIC_API_KEY}
-        if ANTHROPIC_BASE_URL:
-            kwargs["base_url"] = ANTHROPIC_BASE_URL
-            
-        _client = anthropic.Anthropic(**kwargs)
-    return _client
+        genai.configure(api_key=GEMINI_API_KEY)
+        _client_configured = True
 
 
 def _call(
@@ -68,47 +63,58 @@ def _call(
     max_tokens: int = MAX_TOKENS,
     retries: int = 2,
     system_prompt: str | None = None,
+    response_mime_type: str | None = None,
 ) -> str:
     """
-    Call the Claude API with prompt caching on the system context.
+    Call the Gemini API.
     Returns raw response text.
     """
-    client = _get_client()
+    _configure_client()
 
     sys_prompt_text = system_prompt if system_prompt else _SYSTEM_PROMPT
 
-    system_block = [
-        {
-            "type": "text",
-            "text": sys_prompt_text,
-            "cache_control": {"type": "ephemeral"},
-        }
-    ]
+    # Initialize model with system instruction
+    gemini_model = genai.GenerativeModel(
+        model_name=model,
+        system_instruction=sys_prompt_text
+    )
+
+    generation_config = GenerationConfig(
+        max_output_tokens=max_tokens,
+        response_mime_type=response_mime_type
+    )
 
     for attempt in range(retries + 1):
         try:
             logger.debug("LLM call | model=%s | attempt=%d", model, attempt + 1)
-            response = client.messages.create(
-                model=model,
-                max_tokens=max_tokens,
-                system=system_block,
-                messages=[{"role": "user", "content": prompt}],
+            response = gemini_model.generate_content(
+                prompt,
+                generation_config=generation_config
             )
-            usage = response.usage
-            logger.info(
-                "LLM usage | in=%d cached_in=%d out=%d",
-                usage.input_tokens,
-                getattr(usage, "cache_read_input_tokens", 0),
-                usage.output_tokens,
-            )
-            return response.content[0].text
+            # Log usage if available
+            try:
+                usage = response.usage_metadata
+                if usage:
+                    logger.info(
+                        "LLM usage | in=%d out=%d",
+                        usage.prompt_token_count,
+                        usage.candidates_token_count,
+                    )
+            except AttributeError:
+                pass
+                
+            return response.text
 
-        except anthropic.RateLimitError:
+        except exceptions.ResourceExhausted:
             wait = 2 ** attempt * 5
             logger.warning("Rate limit hit — waiting %ds", wait)
             time.sleep(wait)
-        except anthropic.APIStatusError as exc:
+        except exceptions.GoogleAPIError as exc:
             logger.error("API error: %s", exc)
+            if attempt == retries:
+                raise
+        except Exception as exc:
+            logger.error("Unexpected error: %s", exc)
             if attempt == retries:
                 raise
 
@@ -127,15 +133,28 @@ def call_llm_json(
     model: str = PRIMARY_MODEL,
     max_tokens: int = MAX_TOKENS,
     system_prompt: str | None = None,
+    retries: int = 2,
 ) -> dict[str, Any]:
     """Call LLM and return a parsed JSON dict."""
-    raw = _call(prompt, model=model, max_tokens=max_tokens, system_prompt=system_prompt)
-    raw = _strip_fences(raw)
-    try:
-        return json.loads(raw)
-    except json.JSONDecodeError as exc:
-        logger.error("JSON parse failed. Raw response:\n%s", raw[:500])
-        raise ValueError(f"LLM returned invalid JSON: {exc}") from exc
+    last_err = None
+    for attempt in range(retries + 1):
+        raw = _call(
+            prompt, 
+            model=model, 
+            max_tokens=max_tokens, 
+            system_prompt=system_prompt,
+            response_mime_type="application/json"
+        )
+        raw = _strip_fences(raw)
+        try:
+            return json.loads(raw)
+        except json.JSONDecodeError as exc:
+            logger.error("JSON parse failed. Raw response:\n%s", raw[:500])
+            last_err = exc
+            if attempt < retries:
+                logger.warning("Retrying JSON generation... (attempt %d)", attempt + 1)
+                time.sleep(2)
+    raise ValueError(f"LLM returned invalid JSON: {last_err}") from last_err
 
 
 def call_llm_text(

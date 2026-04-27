@@ -260,7 +260,7 @@ if __name__ == "__main__":
         sys.exit(0)
     except EnvironmentError as exc:
         logger.error("Configuration error: %s", exc)
-        logger.error("Make sure ANTHROPIC_API_KEY is set in your .env file")
+        logger.error("Make sure GEMINI_API_KEY is set in your .env file")
         sys.exit(1)
     except Exception as exc:
         logger.exception("Pipeline failed: %s", exc)

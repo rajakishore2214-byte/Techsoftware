@@ -13,10 +13,10 @@ pip install -r requirements.txt
 
 ```bash
 copy .env.example .env
-# Now edit .env and replace sk-ant-api03-YOUR_KEY_HERE with your real key
+# Now edit .env and replace your_gemini_api_key_here with your real key
 ```
 
-Get your key at: https://console.anthropic.com/
+Get your key at: https://aistudio.google.com/app/apikey
 
 ### 3. Run the pipeline
 
@@ -83,9 +83,9 @@ Techsoftware/
 
 | Setting | Default | Description |
 |---------|---------|-------------|
-| `PRIMARY_MODEL` | `claude-sonnet-4-6` | Main generation model |
-| `QC_MODEL` | `claude-sonnet-4-6` | Quality control model |
-| `FAST_MODEL` | `claude-haiku-4-5-20251001` | Lightweight tasks |
+| `PRIMARY_MODEL` | `gemini-1.5-pro` | Main generation model |
+| `QC_MODEL` | `gemini-1.5-pro` | Quality control model |
+| `FAST_MODEL` | `gemini-1.5-flash` | Lightweight tasks |
 | `QC_ENABLED` | `True` | Run quality control pass |
 | `SIMULATE_VIRAL_DATA` | `True` | Auto-simulate viral content |
 | `MOCK_MEDIA_APIS` | `True` | Produce prompts instead of calling video/image APIs |
@@ -174,7 +174,7 @@ See `output/sample_output.json` for a complete example.
 
 ## Troubleshooting
 
-**`ANTHROPIC_API_KEY is not set`**
+**`GEMINI_API_KEY is not set`**
 → Copy `.env.example` to `.env` and add your key.
 
 **`pytrends` rate limit / empty data**
@@ -184,4 +184,4 @@ See `output/sample_output.json` for a complete example.
 → Rare. Retry — the LLM occasionally wraps JSON in markdown. The parser handles it, but edge cases may slip through on very long outputs.
 
 **Slow pipeline (>2 minutes)**
-→ Each step makes a Claude API call. The prompt-caching system reduces cost but not latency. Normal total run time: 45–90 seconds.
+→ Each step makes a Gemini API call. Normal total run time: 45–90 seconds.

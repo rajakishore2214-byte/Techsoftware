@@ -15,12 +15,11 @@ VIDEOS_DIR  = OUTPUT_DIR / "videos"
 for _dir in [OUTPUT_DIR, SCRIPTS_DIR, IMAGES_DIR, VIDEOS_DIR]:
     _dir.mkdir(parents=True, exist_ok=True)
 
-# ── Claude / Anthropic ────────────────────────────────────────────────────────
-ANTHROPIC_API_KEY  = os.getenv("ANTHROPIC_API_KEY", "")
-ANTHROPIC_BASE_URL = os.getenv("ANTHROPIC_BASE_URL", None)
-PRIMARY_MODEL      = "claude-sonnet-4-6"          # main generation & QC
-FAST_MODEL         = "claude-haiku-4-5-20251001"  # lightweight tasks
-QC_MODEL          = "claude-sonnet-4-6"
+# ── Gemini / Google ───────────────────────────────────────────────────────────
+GEMINI_API_KEY     = os.getenv("GEMINI_API_KEY", "")
+PRIMARY_MODEL      = "gemini-2.5-flash"           # main generation & QC
+FAST_MODEL         = "gemini-2.5-flash"           # lightweight tasks
+QC_MODEL           = "gemini-2.5-flash"
 
 MAX_TOKENS    = 4096
 QC_MAX_TOKENS = 2048
@@ -53,6 +52,6 @@ CONTENT_GOAL    = "Build trust, generate leads, convert high-value clients"
 CONTENT_PLATFORMS = ["Instagram", "LinkedIn", "TikTok", "Facebook", "Twitter/X"]
 
 # ── Pipeline Flags ────────────────────────────────────────────────────────────
-QC_ENABLED          = True
-MOCK_MEDIA_APIS     = True   # set False when real Runway/Canva keys are ready
+QC_ENABLED          = False
+MOCK_MEDIA_APIS     = False   # set False when real Runway/Canva keys are ready
 SIMULATE_VIRAL_DATA = True   # set False to pass real scraped data
